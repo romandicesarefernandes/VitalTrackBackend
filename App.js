@@ -28,6 +28,8 @@ mongoose
 const userSchema = new mongoose.Schema({
   userName: String,
   password: String,
+  phoneNumber: String,
+  email: String,
 });
 
 const user = mongoose.model("User", userSchema);
@@ -36,11 +38,13 @@ const user = mongoose.model("User", userSchema);
 
 app.post("/api/register", async (req, res) => {
   try {
-    const { userName, password } = req.body;
+    const { userName, password, phoneNumber, email } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new user({
       userName,
       password: hashedPassword,
+      phoneNumber,
+      email,
     });
     await newUser.save();
     res.json({ message: "User Registered" });
@@ -51,8 +55,8 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/login", async (req, res) => {
   try {
-    const { userName, password } = req.body;
-    const User = await user.findOne({ userName });
+    const { userName, password, phoneNumber, email } = req.body;
+    const User = await user.findOne({ email });
 
     if (User && (await bcrypt.compare(password, User.password))) {
       res.cookie("userToken", User._id.toString(), { httpOnly: true });
