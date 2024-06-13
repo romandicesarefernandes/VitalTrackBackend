@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
-
+const axios = require("axios");
 const app = express();
 
 app.use(express.json());
@@ -33,8 +33,59 @@ const userSchema = new mongoose.Schema({
 });
 
 const user = mongoose.model("User", userSchema);
+const API_KEY = "6db423635db56cd0fdf46cce1c5edfb3";
+const APP_ID = "750c3845";
 
 //Routes
+
+app.get("/api/food_search", async (req, res) => {
+  const { ingr } = req.body;
+  console.log(ingr);
+
+  try {
+    const response = await axios.get(
+      `https://api.edamam.com/api/food-database/v2/parser?app_id=750c3845&app_key=6db423635db56cd0fdf46cce1c5edfb3&ingr=${ingr}&nutrition-type=logging`
+    );
+    console.log(response.data.hints);
+    res.send(response.data.hints);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.post("/api/food_request_nutrients", async (req, res) => {
+  const { quantity, measureURI, qualifiers, foodId } = req.body.ingredients[0];
+
+  const recipe = {
+    ingredients: [
+      {
+        quantity,
+        measureURI,
+        qualifiers,
+        foodId,
+      },
+    ],
+  };
+
+  try {
+    const response = await axios.post(
+      `https://api.edamam.com/api/food-database/v2/nutrients?app_id=${APP_ID}&app_key=${API_KEY}`,
+      recipe,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// https://api.edamam.com/api/nutrition-data?app_id=b25bef67&app_key=9116481b7e44b86ff4e673852e47d334&nutrition-type=cooking&ingr=5%20rice'
 
 app.post("/api/register", async (req, res) => {
   try {
