@@ -39,12 +39,12 @@ const APP_ID = "750c3845";
 //Routes
 
 app.get("/api/food_search", async (req, res) => {
-  const { ingr } = req.body;
-  console.log(ingr);
+  const { ingr, brand } = req.query;
+  console.log(ingr, brand);
 
   try {
     const response = await axios.get(
-      `https://api.edamam.com/api/food-database/v2/parser?app_id=750c3845&app_key=6db423635db56cd0fdf46cce1c5edfb3&ingr=${ingr}&nutrition-type=logging`
+      `https://api.edamam.com/api/food-database/v2/parser?app_id=750c3845&app_key=6db423635db56cd0fdf46cce1c5edfb3&ingr=${ingr}&brand=${brand}&nutrition-type=logging`
     );
     console.log(response.data.hints);
     res.send(response.data.hints);
