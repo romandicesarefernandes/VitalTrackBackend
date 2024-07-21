@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
   password: String,
   phoneNumber: String,
   email: String,
+  provider: String,
 });
 
 const user = mongoose.model("User", userSchema);
@@ -89,13 +90,14 @@ app.post("/api/food_request_nutrients", async (req, res) => {
 
 app.post("/api/register", async (req, res) => {
   try {
-    const { userName, password, phoneNumber, email } = req.body;
+    const { userName, password, phoneNumber, email, provider } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new user({
       userName,
       password: hashedPassword,
       phoneNumber,
       email,
+      provider,
     });
     await newUser.save();
     res.json({ message: "User Registered" });
@@ -112,6 +114,23 @@ app.post("/api/login", async (req, res) => {
     if (User && (await bcrypt.compare(password, User.password))) {
       res.cookie("userToken", User._id.toString(), { httpOnly: true });
       res.status(200).send("Login Success");
+    } else {
+      res.status(401).send("Invalid Credentials");
+    }
+  } catch (error) {
+    res.status(500).send("error");
+  }
+});
+
+app.post("/api/getclient", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const User = await user.findOne({ email });
+    console.log(User);
+    if (User.provider === "yes") {
+      //  If user is found
+      res.cookie("userToken", User._id.toString(), { httpOnly: true });
+      res.status(200).send("User Found");
     } else {
       res.status(401).send("Invalid Credentials");
     }
