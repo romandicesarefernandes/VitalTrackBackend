@@ -1,0 +1,15 @@
+[project]
+name = "VitalTrack"
+version = "0.0.1"
+description = "Default template for PDM package"
+authors = [
+    {name = "Daniel Williams", email = "danielfwilliams@protonmail.com"},
+]
+dependencies = []
+requires-python = "==3.10.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
