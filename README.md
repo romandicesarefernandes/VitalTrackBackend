@@ -7,4 +7,6 @@
 
 ## Run
 
-...
+```py
+pdm run dev
+```

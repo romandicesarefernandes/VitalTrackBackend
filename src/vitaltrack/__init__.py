@@ -1,0 +1,3 @@
+"""
+Vital Track Health initialization.
+"""

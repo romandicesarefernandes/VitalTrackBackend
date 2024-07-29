@@ -5,7 +5,9 @@ description = "Default template for PDM package"
 authors = [
     {name = "Daniel Williams", email = "danielfwilliams@protonmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "fastapi>=0.111.1",
+]
 requires-python = "==3.10.*"
 readme = "README.md"
 license = {text = "MIT"}
@@ -22,3 +24,8 @@ lint = [
     "pylint>=3.2.6",
     "black>=24.4.2",
 ]
+
+[tool.pdm.scripts]
+dev = """
+    fastapi dev src/vitaltrack/main.py
+"""
