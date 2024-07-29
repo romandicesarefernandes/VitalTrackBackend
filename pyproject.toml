@@ -13,3 +13,12 @@ license = {text = "MIT"}
 
 [tool.pdm]
 distribution = false
+
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=8.3.2",
+]
+lint = [
+    "pylint>=3.2.6",
+    "black>=24.4.2",
+]
