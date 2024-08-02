@@ -7,6 +7,9 @@ authors = [
 ]
 dependencies = [
     "fastapi>=0.111.1",
+    "python-dotenv>=1.0.1",
+    "motor>=3.5.1",
+    "pydantic>=2.8.2",
 ]
 requires-python = "==3.10.*"
 readme = "README.md"
