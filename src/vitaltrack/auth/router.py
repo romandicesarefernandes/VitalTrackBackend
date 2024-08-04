@@ -24,6 +24,15 @@ async def login_user(
 ):
     """
     Authenticate and login.
+
+    Args:
+        user: The user data provided in the request body.
+            This includes user details such as username, email, etc.
+        db_manager: Dependency injection for the database manager
+            used to connect to the MongoDB database and perform operations.
+
+    Returns:
+        TODO: Add return
     """
     user_in_req_dict = user.model_dump()
 

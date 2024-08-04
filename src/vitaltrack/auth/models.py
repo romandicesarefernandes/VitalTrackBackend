@@ -59,5 +59,13 @@ class UserInRegister(UserBase):
 
 
 class UserInLogin(pydantic.BaseModel):
+    """
+    User model for handling user data when at login.
+
+    Attributes:
+        email: Email of the user.
+        password: Unhashed password of the user.
+    """
+
     email: str
     password: str
