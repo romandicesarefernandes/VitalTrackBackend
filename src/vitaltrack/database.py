@@ -21,7 +21,7 @@ class DatabaseManager:
     client: motor_asyncio.AsyncIOMotorClient = None
     db: motor_asyncio.AsyncIOMotorDatabase = None
 
-    async def connect_to_cluster(self, url: str, db_name: str | None = None):
+    def connect_to_cluster(self, url: str, db_name: str | None = None):
         """
         Connect to a MongoDB cluster.
 
@@ -37,7 +37,7 @@ class DatabaseManager:
         if db_name:
             self.db = self.client[db_name]
 
-    async def close_cluster_connection(self):
+    def close_cluster_connection(self):
         """
         Close the connection to the MongoDB cluster.
 
@@ -46,7 +46,7 @@ class DatabaseManager:
         """
         self.client.close()
 
-    async def connect_to_database(self, db_name: str):
+    def connect_to_database(self, db_name: str):
         """
         Select a database within the connected MongoDB cluster.
 

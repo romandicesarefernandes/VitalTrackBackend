@@ -6,6 +6,8 @@ import uuid
 
 import pydantic
 
+from . import utils
+
 
 class UserBase(pydantic.BaseModel):
     """
@@ -34,12 +36,28 @@ class UserInDB(UserBase):
     """
 
     _id: uuid.UUID
+    salt: bytes
+    password_hash: bytes
+
+    def check_password(self, password: str):
+        return utils.verify_password(password.encode("utf-8"), self.password_hash)
+
+    def change_password(self, password: str):
+        self.salt = utils.generate_salt()
+        self.password_hash = utils.get_password_hash(self.salt, password)
+
+
+class UserInRegister(UserBase):
+    """
+    User model for handling user data when registering.
+
+    Attributes:
+        password: Unhashed password of the user.
+    """
+
     password: str
 
 
-class UserInRequest(UserBase):
-    """
-    User model for handling user data in requests.
-    """
-
-    pass
+class UserInLogin(pydantic.BaseModel):
+    email: str
+    password: str
