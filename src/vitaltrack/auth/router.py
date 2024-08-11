@@ -2,6 +2,8 @@
 Authentication endpoints.
 """
 
+from __future__ import annotations
+
 import uuid
 from typing import Annotated
 
@@ -9,15 +11,16 @@ import fastapi
 
 from vitaltrack import config
 from vitaltrack import dependencies
+from vitaltrack import models as global_modals
 
 from . import models
 from . import services
 from . import utils
 
-router = fastapi.APIRouter()
+router = fastapi.APIRouter(prefix="/auth")
 
 
-@router.post("/login")
+@router.post("/login", response_model=global_modals.ResponseBase)
 async def login_user(
     user: models.UserInLogin,
     db_manager: dependencies.database_manager_dep,
@@ -41,10 +44,11 @@ async def login_user(
         raise fastapi.HTTPException(
             status_code=400, detail="incorrect email or password"
         )
-    return "login successful"
+
+    return {"message": "login successful", "data": {}}
 
 
-@router.post("/register")
+@router.post("/register", response_model=global_modals.ResponseBase)
 async def register_user(
     user: Annotated[models.UserInRegister, fastapi.Body(embed=True)],
     db_manager: dependencies.database_manager_dep,
@@ -71,7 +75,10 @@ async def register_user(
     )
 
     new_user = models.UserInDB(
-        _id=uuid.uuid4(), password_hash=password_hash, salt=salt, **user_in_req_dict
+        id=uuid.uuid4(),
+        password_hash=password_hash,
+        salt=salt,
+        **user_in_req_dict,
     )
 
     result = await db_manager.db[config.USERS_COLLECTION_NAME].insert_one(
@@ -80,4 +87,4 @@ async def register_user(
 
     # TODO: Verify database save success
 
-    return f"{user_in_req_dict['email']} registered"
+    return {"message": f"{user_in_req_dict['email']} registered", "data": {}}

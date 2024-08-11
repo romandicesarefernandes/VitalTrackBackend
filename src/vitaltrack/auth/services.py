@@ -2,6 +2,9 @@
 Authentication business logic
 """
 
+from __future__ import annotations
+
+
 from vitaltrack import config
 from vitaltrack import database
 
@@ -27,4 +30,6 @@ async def get_user(
         {"email": email}
     )
     if result:
+        print(f"{result['id']=}")
+        print(f"{type(result['id'])=}")
         return models.UserInDB(**result)

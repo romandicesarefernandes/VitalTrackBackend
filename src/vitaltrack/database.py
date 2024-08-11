@@ -33,6 +33,7 @@ class DatabaseManager:
             url,
             minPoolSize=config.MIN_CONNECTIONS_COUNT,
             maxPoolSize=config.MAX_CONNECTIONS_COUNT,
+            uuidRepresentation="standard",
         )
         if db_name:
             self.db = self.client[db_name]

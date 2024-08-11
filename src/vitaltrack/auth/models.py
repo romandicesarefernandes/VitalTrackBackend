@@ -2,6 +2,8 @@
 Authentication endpoints.
 """
 
+from __future__ import annotations
+
 import uuid
 
 import pydantic
@@ -14,16 +16,19 @@ class UserBase(pydantic.BaseModel):
     Base model for user information.
 
     Attributes:
+        first_name: The first name of the user.
+        last_name: The last name of the user.
         username: The username of the user.
         phone_number: The phone number of the user.
         email: The email address of the user.
         provider: A list of strings representing the providers associated with the user.
     """
 
-    username: str
-    phone_number: str
-    email: str
-    provider: list[str]
+    first_name: str = pydantic.Field(...)
+    last_name: str = pydantic.Field(...)
+    username: str = pydantic.Field(...)
+    phone_number: str = pydantic.Field(...)
+    email: pydantic.EmailStr = pydantic.Field(...)
 
 
 class UserInDB(UserBase):
@@ -35,9 +40,12 @@ class UserInDB(UserBase):
         password: The hashed password of the user.
     """
 
-    _id: uuid.UUID
-    salt: bytes
-    password_hash: bytes
+    model_config = pydantic.ConfigDict(populate_by_name=True)
+
+    id: uuid.UUID = pydantic.Field(alias="_id")
+    salt: bytes = pydantic.Field(...)
+    password_hash: bytes = pydantic.Field(...)
+    provider: list[ProviderInDB] = pydantic.Field(default=[])
 
     def check_password(self, password: str):
         return utils.verify_password(password.encode("utf-8"), self.password_hash)
@@ -55,7 +63,7 @@ class UserInRegister(UserBase):
         password: Unhashed password of the user.
     """
 
-    password: str
+    password: str = pydantic.Field(...)
 
 
 class UserInLogin(pydantic.BaseModel):
@@ -67,5 +75,28 @@ class UserInLogin(pydantic.BaseModel):
         password: Unhashed password of the user.
     """
 
-    email: str
-    password: str
+    email: pydantic.EmailStr = pydantic.Field(...)
+    password: str = pydantic.Field(...)
+
+
+class ProviderBase(pydantic.BaseModel):
+    first_name: str = pydantic.Field(...)
+    last_name: str = pydantic.Field(...)
+    email: pydantic.EmailStr = pydantic.Field(...)
+    phone_number: str = pydantic.Field(...)
+    users: list[UserInDB] = pydantic.Field(default=None)
+
+
+class ProviderInDB(ProviderBase):
+    model_config = pydantic.ConfigDict(populate_by_name=True)
+
+    id: uuid.UUID = pydantic.Field(alias="_id")
+    salt: bytes = pydantic.Field(...)
+    password_hash: bytes = pydantic.Field(...)
+
+    def check_password(self, password: str):
+        return utils.verify_password(password.encode("utf-8"), self.password_hash)
+
+    def change_password(self, password: str):
+        self.salt = utils.generate_salt()
+        self.password_hash = utils.get_password_hash(self.salt, password)

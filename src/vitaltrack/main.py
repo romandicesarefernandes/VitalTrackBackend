@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 import fastapi
 
 from vitaltrack import auth
+from vitaltrack import food
 from vitaltrack import config
 from vitaltrack import database
 from vitaltrack import dependencies
@@ -27,3 +28,4 @@ async def lifespan(app: fastapi.FastAPI):
 app = fastapi.FastAPI(lifespan=lifespan)
 
 app.include_router(auth.router)
+app.include_router(food.router)
