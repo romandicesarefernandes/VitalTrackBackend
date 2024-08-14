@@ -11,18 +11,18 @@ import fastapi
 
 from vitaltrack import config
 from vitaltrack import dependencies
-from vitaltrack import models as global_modals
 
 from . import models
+from . import schemas
 from . import services
 from . import utils
 
 router = fastapi.APIRouter(prefix="/auth")
 
 
-@router.post("/login", response_model=global_modals.ResponseBase)
+@router.post("/login", response_model=schemas.UserResponse)
 async def login_user(
-    user: models.UserInLogin,
+    user: schemas.UserInLogin,
     db_manager: dependencies.database_manager_dep,
 ):
     """
@@ -48,9 +48,9 @@ async def login_user(
     return {"message": "login successful", "data": {}}
 
 
-@router.post("/register", response_model=global_modals.ResponseBase)
+@router.post("/register", response_model=schemas.UserResponse)
 async def register_user(
-    user: Annotated[models.UserInRegister, fastapi.Body(embed=True)],
+    user: Annotated[schemas.UserInRegister, fastapi.Body(embed=True)],
     db_manager: dependencies.database_manager_dep,
 ):
     """
@@ -82,7 +82,7 @@ async def register_user(
     )
 
     result = await db_manager.db[config.USERS_COLLECTION_NAME].insert_one(
-        new_user.model_dump()
+        new_user.model_dump(by_alias=True)
     )
 
     # TODO: Verify database save success

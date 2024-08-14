@@ -30,6 +30,5 @@ async def get_user(
         {"email": email}
     )
     if result:
-        print(f"{result['id']=}")
-        print(f"{type(result['id'])=}")
+        print(f"{result.keys()=}")
         return models.UserInDB(**result)
