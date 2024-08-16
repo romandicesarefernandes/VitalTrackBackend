@@ -34,6 +34,9 @@ class FoodBase(schemas.SchemaBase):
     )
 
 
+class MultipleFoodIdsInResponse(schemas.ResponseBase): ...
+
+
 class FoodInResponse(schemas.ResponseBase):
     data: FoodBase = pydantic.Field(...)
 

@@ -7,10 +7,11 @@ from __future__ import annotations
 from typing import Annotated
 
 import fastapi
-
 import httpx
+import pydantic
 
 from vitaltrack import config
+from vitaltrack import dependencies
 
 from . import schemas
 
@@ -56,4 +57,23 @@ async def nutrients(
     return {
         "message": "nutrients queried",
         "data": res_dict,
+    }
+
+
+@router.post(
+    "/add",
+    response_model=schemas.MultipleFoodIdsInResponse,
+)
+async def add(
+    email: Annotated[pydantic.EmailStr, fastapi.Body()],
+    food_ids: Annotated[list[str], fastapi.Body()],
+    db_manager: dependencies.database_manager_dep,
+):
+    result = await db_manager.db[config.USERS_COLLECTION_NAME].update_one(
+        {"email": email}, {"$addToSet": {"foods": {"$each": food_ids}}}
+    )
+
+    return {
+        "message": "foods added",
+        "data": {},
     }
