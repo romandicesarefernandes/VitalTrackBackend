@@ -15,10 +15,11 @@ from vitaltrack import dependencies
 
 from . import schemas
 
-router = fastapi.APIRouter(prefix="/food")
+food_router = fastapi.APIRouter()
+user_router = fastapi.APIRouter()
 
 
-@router.get(
+@food_router.get(
     "/search",
     response_model=schemas.MultipleFoodsInResponse,
     response_model_by_alias=False,
@@ -40,7 +41,7 @@ async def search(ingredient="", brand=""):
     }
 
 
-@router.post(
+@food_router.post(
     "/nutrients",
     response_model=schemas.NutrientsInResponse,
     response_model_by_alias=False,
@@ -60,11 +61,11 @@ async def nutrients(
     }
 
 
-@router.post(
-    "/add",
+@user_router.post(
+    "/add-food",
     response_model=schemas.MultipleFoodIdsInResponse,
 )
-async def add(
+async def add_food_user(
     email: Annotated[pydantic.EmailStr, fastapi.Body()],
     food_ids: Annotated[list[str], fastapi.Body()],
     db_manager: dependencies.database_manager_dep,

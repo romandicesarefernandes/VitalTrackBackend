@@ -17,9 +17,8 @@ from . import schemas
 from . import services
 from . import utils
 
-# These are included in the main router below route definitions
-user_router = fastapi.APIRouter(prefix="/user")
-provider_router = fastapi.APIRouter(prefix="/provider")
+user_router = fastapi.APIRouter()
+provider_router = fastapi.APIRouter()
 
 
 @user_router.post("/register", response_model=schemas.UserRegisterResponse)
