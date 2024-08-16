@@ -47,7 +47,7 @@ class UserInDB(models.ModelInDBBase, AuthMixin):
     username: str = pydantic.Field(...)
     phone_number: str = pydantic.Field(...)
     email: pydantic.EmailStr = pydantic.Field(...)
-    provider: list[ProviderInDB] = pydantic.Field(default=[])
+    provider: list[uuid.UUID] = pydantic.Field(default=[])
     foods: list[str] = pydantic.Field(default=[])
 
 
@@ -57,4 +57,5 @@ class ProviderInDB(models.ModelInDBBase, AuthMixin):
     last_name: str = pydantic.Field(...)
     email: pydantic.EmailStr = pydantic.Field(...)
     phone_number: str = pydantic.Field(...)
-    users: list[UserInDB] = pydantic.Field(default=None)
+    provider_code: str = pydantic.Field(...)
+    users: list[uuid.UUID] = pydantic.Field(default=[])

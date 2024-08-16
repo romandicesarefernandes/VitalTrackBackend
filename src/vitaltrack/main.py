@@ -10,7 +10,6 @@ from vitaltrack import auth
 from vitaltrack import food
 from vitaltrack import config
 from vitaltrack import database
-from vitaltrack import dependencies
 
 
 # Actions before and after the application begins accepting requests.
@@ -27,5 +26,6 @@ async def lifespan(app: fastapi.FastAPI):
 
 app = fastapi.FastAPI(lifespan=lifespan)
 
-app.include_router(auth.router)
+app.include_router(auth.user_router)
+app.include_router(auth.provider_router)
 app.include_router(food.router)

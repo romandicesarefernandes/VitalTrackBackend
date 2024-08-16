@@ -4,6 +4,8 @@ Authentication schemas for data validation.
 
 from __future__ import annotations
 
+from typing import Any
+
 import pydantic
 
 from vitaltrack import schemas
@@ -29,7 +31,8 @@ class UserBase(schemas.SchemaBase):
     email: pydantic.EmailStr = pydantic.Field(...)
 
 
-class UserResponse(schemas.ResponseBase): ...
+class UserRegisterResponse(schemas.ResponseBase):
+    data: UserBase = pydantic.Field(...)
 
 
 class UserInRegister(UserBase):
@@ -41,6 +44,7 @@ class UserInRegister(UserBase):
     """
 
     password: str = pydantic.Field(...)
+    provider_code: str = pydantic.Field(...)
 
 
 class UserInLogin(schemas.SchemaBase):
@@ -56,9 +60,32 @@ class UserInLogin(schemas.SchemaBase):
     password: str = pydantic.Field(...)
 
 
+class UserLoginResponse(schemas.ResponseBase):
+    data: dict[str, Any] = pydantic.Field(...)
+
+
 class ProviderBase(schemas.SchemaBase):
     first_name: str = pydantic.Field(...)
     last_name: str = pydantic.Field(...)
     email: pydantic.EmailStr = pydantic.Field(...)
     phone_number: str = pydantic.Field(...)
-    # users: list[UserInDB] = pydantic.Field(default=None)
+
+
+class ProviderInRegister(ProviderBase):
+    password: str = pydantic.Field(...)
+
+
+class ProviderInLogin(schemas.SchemaBase):
+    email: pydantic.EmailStr = pydantic.Field(...)
+    password: str = pydantic.Field(...)
+
+
+class ProviderRegisterResponse(schemas.ResponseBase):
+    class _ProviderWithCode(ProviderBase):
+        provider_code: str = pydantic.Field(...)
+
+    data: _ProviderWithCode = pydantic.Field(...)
+
+
+class ProviderLoginResponse(schemas.ResponseBase):
+    data: dict[str, Any] = pydantic.Field(...)
