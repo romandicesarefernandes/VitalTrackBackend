@@ -9,10 +9,10 @@ import pydantic
 from typing import Any
 from typing import Optional
 
-from vitaltrack import schemas
+from vitaltrack import core
 
 
-class FoodBase(schemas.SchemaBase):
+class FoodBase(core.schemas.SchemaBase):
     food_id: str = pydantic.Field(alias="foodId")
     uri: Optional[pydantic.HttpUrl] = pydantic.Field(default=None)
     label: Optional[str] = pydantic.Field(default=None)
@@ -34,18 +34,18 @@ class FoodBase(schemas.SchemaBase):
     )
 
 
-class MultipleFoodIdsInResponse(schemas.ResponseBase): ...
+class MultipleFoodIdsInResponse(core.schemas.ResponseBase): ...
 
 
-class FoodInResponse(schemas.ResponseBase):
+class FoodInResponse(core.schemas.ResponseBase):
     data: FoodBase = pydantic.Field(...)
 
 
-class MultipleFoodsInResponse(schemas.ResponseBase):
+class MultipleFoodsInResponse(core.schemas.ResponseBase):
     data: list[FoodBase] = pydantic.Field(...)
 
 
-class IngredientBase(schemas.SchemaBase):
+class IngredientBase(core.schemas.SchemaBase):
     quantity: int = pydantic.Field(...)
     measure_uri: str = pydantic.Field(alias="measureURI")
     qualifiers: list[str] = pydantic.Field(...)
@@ -56,5 +56,5 @@ class IngredientsInRequest(pydantic.BaseModel):
     ingredients: list[IngredientBase] = pydantic.Field(...)
 
 
-class NutrientsInResponse(schemas.ResponseBase):
+class NutrientsInResponse(core.schemas.ResponseBase):
     data: dict[str, Any] = pydantic.Field(...)

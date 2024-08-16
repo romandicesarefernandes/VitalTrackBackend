@@ -8,18 +8,16 @@ from typing import Annotated
 
 import fastapi
 import httpx
-import pydantic
 
 from vitaltrack import config
-from vitaltrack import dependencies
 
 from . import schemas
 
-food_router = fastapi.APIRouter()
+router = fastapi.APIRouter()
 user_router = fastapi.APIRouter()
 
 
-@food_router.get(
+@router.get(
     "/search",
     response_model=schemas.MultipleFoodsInResponse,
     response_model_by_alias=False,
@@ -41,7 +39,7 @@ async def search(ingredient="", brand=""):
     }
 
 
-@food_router.post(
+@router.post(
     "/nutrients",
     response_model=schemas.NutrientsInResponse,
     response_model_by_alias=False,
@@ -58,23 +56,4 @@ async def nutrients(
     return {
         "message": "nutrients queried",
         "data": res_dict,
-    }
-
-
-@user_router.post(
-    "/add-food",
-    response_model=schemas.MultipleFoodIdsInResponse,
-)
-async def add_food_user(
-    email: Annotated[pydantic.EmailStr, fastapi.Body()],
-    food_ids: Annotated[list[str], fastapi.Body()],
-    db_manager: dependencies.database_manager_dep,
-):
-    result = await db_manager.db[config.USERS_COLLECTION_NAME].update_one(
-        {"email": email}, {"$addToSet": {"foods": {"$each": food_ids}}}
-    )
-
-    return {
-        "message": "foods added",
-        "data": {},
     }

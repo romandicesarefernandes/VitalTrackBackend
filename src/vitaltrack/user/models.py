@@ -1,5 +1,5 @@
 """
-Authentication models interactions with MongoDB.
+User models interactions with MongoDB.
 
 'InDB' is add to class names to add more distinction from schemas.
 """
@@ -10,24 +10,10 @@ import uuid
 
 import pydantic
 
-from vitaltrack import models
-
-from . import utils
+from vitaltrack import core
 
 
-class AuthMixin(pydantic.BaseModel):
-    salt: bytes = pydantic.Field(...)
-    password_hash: bytes = pydantic.Field(...)
-
-    def check_password(self, password: str):
-        return utils.verify_password(password.encode("utf-8"), self.password_hash)
-
-    def change_password(self, password: str):
-        self.salt = utils.generate_salt()
-        self.password_hash = utils.get_password_hash(self.salt, password)
-
-
-class UserInDB(models.ModelInDBBase, AuthMixin):
+class UserInDB(core.models.ModelInDBBase, core.models.AuthMixin):
     """
     User collection for Mongo.
 
@@ -47,15 +33,6 @@ class UserInDB(models.ModelInDBBase, AuthMixin):
     username: str = pydantic.Field(...)
     phone_number: str = pydantic.Field(...)
     email: pydantic.EmailStr = pydantic.Field(...)
+    conditions: list[str] = pydantic.Field(...)
     provider: list[uuid.UUID] = pydantic.Field(default=[])
     foods: list[str] = pydantic.Field(default=[])
-
-
-class ProviderInDB(models.ModelInDBBase, AuthMixin):
-    id: uuid.UUID = pydantic.Field(alias="_id")
-    first_name: str = pydantic.Field(...)
-    last_name: str = pydantic.Field(...)
-    email: pydantic.EmailStr = pydantic.Field(...)
-    phone_number: str = pydantic.Field(...)
-    provider_code: str = pydantic.Field(...)
-    users: list[uuid.UUID] = pydantic.Field(default=[])

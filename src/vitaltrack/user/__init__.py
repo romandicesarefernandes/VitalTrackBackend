@@ -1,5 +1,5 @@
 """
-Authentication module.
+User module.
 """
 
 from .router import *

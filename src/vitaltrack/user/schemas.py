@@ -1,5 +1,5 @@
 """
-Authentication schemas for data validation.
+User schemas for data validation.
 """
 
 from __future__ import annotations
@@ -8,10 +8,10 @@ from typing import Any
 
 import pydantic
 
-from vitaltrack import schemas
+from vitaltrack import core
 
 
-class UserBase(schemas.SchemaBase):
+class UserBase(core.schemas.SchemaBase):
     """
     Base model for user information.
 
@@ -22,6 +22,7 @@ class UserBase(schemas.SchemaBase):
         phone_number: The phone number of the user.
         email: The email address of the user.
         provider: A list of strings representing the providers associated with the user.
+        conditions: Conditions a user has.
     """
 
     first_name: str = pydantic.Field(...)
@@ -29,9 +30,10 @@ class UserBase(schemas.SchemaBase):
     username: str = pydantic.Field(...)
     phone_number: str = pydantic.Field(...)
     email: pydantic.EmailStr = pydantic.Field(...)
+    conditions: list[str] = pydantic.Field(...)
 
 
-class UserRegisterResponse(schemas.ResponseBase):
+class UserRegisterResponse(core.schemas.ResponseBase):
     data: UserBase = pydantic.Field(...)
 
 
@@ -47,7 +49,7 @@ class UserInRegister(UserBase):
     provider_code: str = pydantic.Field(...)
 
 
-class UserInLogin(schemas.SchemaBase):
+class UserInLogin(core.schemas.SchemaBase):
     """
     User model for handling user data when at login.
 
@@ -60,32 +62,5 @@ class UserInLogin(schemas.SchemaBase):
     password: str = pydantic.Field(...)
 
 
-class UserLoginResponse(schemas.ResponseBase):
-    data: dict[str, Any] = pydantic.Field(...)
-
-
-class ProviderBase(schemas.SchemaBase):
-    first_name: str = pydantic.Field(...)
-    last_name: str = pydantic.Field(...)
-    email: pydantic.EmailStr = pydantic.Field(...)
-    phone_number: str = pydantic.Field(...)
-
-
-class ProviderInRegister(ProviderBase):
-    password: str = pydantic.Field(...)
-
-
-class ProviderInLogin(schemas.SchemaBase):
-    email: pydantic.EmailStr = pydantic.Field(...)
-    password: str = pydantic.Field(...)
-
-
-class ProviderRegisterResponse(schemas.ResponseBase):
-    class _ProviderWithCode(ProviderBase):
-        provider_code: str = pydantic.Field(...)
-
-    data: _ProviderWithCode = pydantic.Field(...)
-
-
-class ProviderLoginResponse(schemas.ResponseBase):
+class UserLoginResponse(core.schemas.ResponseBase):
     data: dict[str, Any] = pydantic.Field(...)
