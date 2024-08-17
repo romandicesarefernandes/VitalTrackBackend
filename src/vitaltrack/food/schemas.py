@@ -13,7 +13,7 @@ from vitaltrack import core
 
 
 class FoodBase(core.schemas.SchemaBase):
-    food_id: str = pydantic.Field(alias="foodId")
+    food_code: str = pydantic.Field()
     uri: Optional[pydantic.HttpUrl] = pydantic.Field(default=None)
     label: Optional[str] = pydantic.Field(default=None)
     known_as: Optional[str] = pydantic.Field(alias="knownAs", default=None)
@@ -34,6 +34,10 @@ class FoodBase(core.schemas.SchemaBase):
     )
 
 
+class FoodInSearch(core.schemas.SchemaBase):
+    foods: list[str] = pydantic.Field(...)
+
+
 class MultipleFoodIdsInResponse(core.schemas.ResponseBase): ...
 
 
@@ -47,9 +51,9 @@ class MultipleFoodsInResponse(core.schemas.ResponseBase):
 
 class IngredientBase(core.schemas.SchemaBase):
     quantity: int = pydantic.Field(...)
-    measure_uri: str = pydantic.Field(alias="measureURI")
+    measure_uri: str = pydantic.Field()
     qualifiers: list[str] = pydantic.Field(...)
-    food_id: str = pydantic.Field(alias="foodId")
+    food_code: str = pydantic.Field()
 
 
 class IngredientsInRequest(pydantic.BaseModel):

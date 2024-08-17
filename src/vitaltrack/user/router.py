@@ -137,11 +137,11 @@ async def profile(
 )
 async def add_food(
     email: Annotated[pydantic.EmailStr, fastapi.Body()],
-    food_ids: Annotated[list[str], fastapi.Body()],
+    food_codes: Annotated[list[str], fastapi.Body()],
     db_manager: core.dependencies.database_manager_dep,
 ):
     result = await db_manager.db[config.USERS_COLLECTION_NAME].update_one(
-        {"email": email}, {"$addToSet": {"foods": {"$each": food_ids}}}
+        {"email": email}, {"$addToSet": {"foods": {"$each": food_codes}}}
     )
 
     if result.matched_count == 0:

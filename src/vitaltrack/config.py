@@ -22,10 +22,12 @@ MONGO_DB_DATABASE = os.getenv("MONGO_DB_DATABASE")
 MIN_CONNECTIONS_COUNT = 10
 MAX_CONNECTIONS_COUNT = 10
 
-FOOD_DATABASE_API_KEY = "6db423635db56cd0fdf46cce1c5edfb3"
-FOOD_DATABASE_API_ID = "750c3845"
-FOOD_DATABASE_PARSER_URL = f"https://api.edamam.com/api/food-database/v2/parser?app_id={FOOD_DATABASE_API_ID}&app_key={FOOD_DATABASE_API_KEY}"
-FOOD_DATABASE_NUTRIENTS_URL = f"https://api.edamam.com/api/food-database/v2/nutrients?app_id={FOOD_DATABASE_API_ID}&app_key={FOOD_DATABASE_API_KEY}"
+OPENFOODFACTS_URL = "https://world.openfoodfacts.net/api/v2"
+OPENFOODFACTS_USER_AGENT = "VitalTrackHealth/0.0 (danielfwilliams@protonmail.com)"
+OPENFOODFACTS_USERNAME = os.getenv("OPENFOODFACTS_USERNAME")
+OPENFOODFACTS_PASSWORD = os.getenv("OPENFOODFACTS_PASSWORD")
+OPENFOODFACTS_ENV = os.getenv("OPENFOODFACTS_ENV")
+
 
 USERS_COLLECTION_NAME = "users"
 PROVIDERS_COLLECTION_NAME = "providers"

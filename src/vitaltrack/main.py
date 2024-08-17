@@ -25,7 +25,7 @@ async def lifespan(app: fastapi.FastAPI):
     core.database.global_db_manager.close_cluster_connection()
 
 
-app = fastapi.FastAPI(lifespan=lifespan)
+app = fastapi.FastAPI(lifespan=lifespan, root_path=config.API_V1_STR)
 
 app.include_router(user.router, prefix="/user", tags=["user"])
 app.include_router(provider.router, prefix="/provider", tags=["provider"])
