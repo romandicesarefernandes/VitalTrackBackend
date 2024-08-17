@@ -22,16 +22,16 @@ class ProviderInRegister(ProviderBase):
     password: str = pydantic.Field(...)
 
 
-class ProviderInLogin(core.schemas.SchemaBase):
-    email: pydantic.EmailStr = pydantic.Field(...)
-    password: str = pydantic.Field(...)
-
-
 class ProviderRegisterResponse(core.schemas.ResponseBase):
     class _ProviderWithCode(ProviderBase):
         provider_code: str = pydantic.Field(...)
 
     data: _ProviderWithCode = pydantic.Field(...)
+
+
+class ProviderInLogin(core.schemas.SchemaBase):
+    email: pydantic.EmailStr = pydantic.Field(...)
+    password: str = pydantic.Field(...)
 
 
 class ProviderLoginResponse(core.schemas.ResponseBase):

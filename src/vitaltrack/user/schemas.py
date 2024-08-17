@@ -33,8 +33,12 @@ class UserBase(core.schemas.SchemaBase):
     conditions: list[str] = pydantic.Field(...)
 
 
-class UserRegisterResponse(core.schemas.ResponseBase):
-    data: UserBase = pydantic.Field(...)
+class UserProfile(UserBase):
+    foods: list[str] = pydantic.Field(default=[])
+
+
+class UserProfileResponse(core.schemas.ResponseBase):
+    data: UserProfile = pydantic.Field(...)
 
 
 class UserInRegister(UserBase):
@@ -47,6 +51,10 @@ class UserInRegister(UserBase):
 
     password: str = pydantic.Field(...)
     provider_code: str = pydantic.Field(...)
+
+
+class UserRegisterResponse(core.schemas.ResponseBase):
+    data: UserBase = pydantic.Field(...)
 
 
 class UserInLogin(core.schemas.SchemaBase):

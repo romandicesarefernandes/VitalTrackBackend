@@ -111,6 +111,27 @@ async def login_user(
 
 
 @router.post(
+    "/profile",
+    response_model=schemas.UserProfileResponse,
+)
+async def profile(
+    email: Annotated[pydantic.EmailStr, fastapi.Body(embed=True)],
+    db_manager: core.dependencies.database_manager_dep,
+):
+    user_in_db = await services.get_user(db_manager, {"email": email})
+
+    if not user_in_db:
+        raise fastapi.HTTPException(
+            status_code=400, detail="incorrect email or password"
+        )
+
+    return {
+        "message": "",
+        "data": user_in_db.model_dump(),
+    }
+
+
+@router.post(
     "/add-food",
     response_model=food.schemas.MultipleFoodIdsInResponse,
 )
